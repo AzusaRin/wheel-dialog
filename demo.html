@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialog组件</title>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      border-radius: 4px;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+      padding: 16px;
+    }
+
+    .dialog {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      opacity: 0;
+      transition: all .5s;
+    }
+
+    .dialog.show{
+      display: block;
+    }
+    .dialog.appear{
+      opacity: 1;
+     
+    }
+
+    .dialog .main {
+      width: 40%;
+      background-color: #fff;
+      margin: 40px auto;
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
+      transform: translateY(-100%);
+      transition: all .5s;
+    }
+    .dialog.appear .main{
+      opacity: 1;
+      transform: translateY(50px);
+    }
+
+    .dialog .header {
+      font-size: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dialog .header .close {
+      margin-left: auto;
+      justify-content: center;
+      align-items: center;
+      outline: none;
+      border: none;
+      padding: 16px;
+      background-color: transparent;
+      cursor: pointer;
+    }
+
+    .dialog .header .close::after,
+    .dialog .header .close::before {
+      content: '';
+      display: block;
+      width: 10px;
+      height: 1px;
+      background-color: #333;
+      transform: rotate(45deg);
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+
+    }
+
+    .dialog .header .close::before {
+      transform: rotate(-45deg);
+    }
+
+    .dialog .footer {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .button {
+      margin-right: 10px;
+      border: 1px solid #333;
+      padding: 10px 16px;
+      border-radius: 4px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .dialog .footer .btn-ok {
+      background-color: lightskyblue;
+      border: lightskyblue;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Dialog组件</h2>
+    <button class="button open">点我显示弹窗</button>
+    <p id="log">刚刚进行的操作：</p>
+    <div class="dialog">
+      <div class="main">
+        <div class="header">提示 <button class="close"></button></div>
+        <div class="content">
+          <p>这是一段内容</p>
+        </div>
+        <div class="footer">
+          <button class="button btn-cancel">取消</button>
+          <button class="button primary btn-ok">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    class diaLog {
+      constructor($node, options) {
+        this.$node = $node
+        this.options = options
+        this.onCancel = options.onCancel || function () { }
+        this.onOk = options.onOk || function () { }
+        this.onClose = options.onClose || function () { }
+        this.bind()
+      }
+      bind() {
+        let self = this
+        this.$node.querySelector('.close').onclick = function () {
+          self.hide()
+          self.onClose()
+        }
+        this.$node.querySelector('.btn-cancel').onclick = function () {
+          self.hide()
+          self.onCancel()
+        }
+        this.$node.querySelector('.btn-ok').onclick = function () {
+          self.hide()
+          self.onOk()
+        }
+
+      
+        }
+        hide() {
+          this.$node.classList.remove('appear')
+          setTimeout(() =>{this.$node.classList.remove('show')},400)
+        }
+        show() {
+          this.$node.classList.add('show')
+          setTimeout(() =>{this.$node.classList.add('appear')})
+          
+
+      }
+    }
+    let tanchuang = new diaLog(document.querySelector('.dialog'),{
+      onCancel(){
+        document.querySelector('#log').innerText = '刚刚进行的操作：点击了取消'
+      },
+      onClose(){
+        document.querySelector('#log').innerText = '刚刚进行的操作：点击了关闭'
+      },
+      onOk(){
+        document.querySelector('#log').innerText = '刚刚进行的操作：点击了确认'
+      }
+    })
+    document.querySelector('.open').onclick = function(){
+      tanchuang.show()
+    }
+  </script>
+</body>
+
+</html>
